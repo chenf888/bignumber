@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>超指数工厂 · Hypergrowth</title>
+  <link rel="stylesheet" href="./game.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">↑↑↑</div>
+        <div>
+          <h1>超指数工厂</h1>
+          <p>用高德纳箭头，把数字推向 <span class="target-inline">10↑↑↑↑↑↑↑10</span></p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <label class="switch">
+          <input type="checkbox" id="auto-buy">
+          <span class="switch-track" aria-hidden="true"></span>
+          <span>自动升级</span>
+        </label>
+        <button type="button" id="reset" class="ghost">重置</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="energy-label">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div id="energy-label" class="eyebrow">当前能量</div>
+        <div id="energy" class="energy">0</div>
+        <div id="energy-note" class="energy-note">产能 × 脉冲数</div>
+
+        <div class="rate-row">
+          <div class="rate-chip">
+            <span>产能 / 脉冲</span>
+            <strong id="rate">10</strong>
+          </div>
+          <div class="rate-chip">
+            <span>累计脉冲</span>
+            <strong id="ticks">0</strong>
+          </div>
+          <div class="rate-chip">
+            <span>核心 / 秒</span>
+            <strong id="core-rate">7</strong>
+          </div>
+        </div>
+
+        <button type="button" id="collect" class="collect">
+          <span class="collect-main">采集能量</span>
+          <span class="collect-sub" id="collect-sub">+1 脉冲 · +1 核心</span>
+        </button>
+
+        <div class="structure">
+          <span>产能结构</span>
+          <code id="rate-structure">10</code>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="工厂状态">
+        <div class="stat">
+          <span class="stat-label">核心</span>
+          <strong id="cores">0</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">箭头维度</span>
+          <strong><span id="arrows">0</span><small> / 7</small></strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">高度</span>
+          <strong id="height">1</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">反应堆</span>
+          <strong id="reactor">0</strong>
+        </div>
+      </section>
+
+      <section class="upgrades" aria-label="升级">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-kicker">基础加成</div>
+              <h2>提升高度</h2>
+            </div>
+            <div class="card-level">Lv.<span id="height-level">1</span></div>
+          </div>
+          <p class="card-desc">
+            每提升 1 级高度，产能公式中的指数/箭头参数 +1。高度和反应堆会共同决定超运算的规模。
+          </p>
+          <div class="card-foot">
+            <div class="cost">花费 <strong id="height-cost">18</strong> 核心</div>
+            <button type="button" id="buy-height" class="buy">提升高度</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-kicker">乘数加成</div>
+              <h2>启动反应堆</h2>
+            </div>
+            <div class="card-level">Lv.<span id="reactor-level">0</span></div>
+          </div>
+          <p class="card-desc">
+            每级让产能额外乘以 2，同时把 1 级计入高度参数。前中期最直观的加速手段。
+          </p>
+          <div class="card-foot">
+            <div class="cost">花费 <strong id="reactor-cost">8</strong> 核心</div>
+            <button type="button" id="buy-reactor" class="buy">启动反应堆</button>
+          </div>
+        </article>
+
+        <article class="card card-arrow">
+          <div class="card-head">
+            <div>
+              <div class="card-kicker">维度跃迁</div>
+              <h2>增加高德纳箭头</h2>
+            </div>
+            <div class="card-level"><span id="arrow-count">0</span>↑</div>
+          </div>
+          <p class="card-desc">
+            从乘法跃迁到指数、四则超运算、五级超运算……每多一个箭头，数字的爆炸方式就升一维。
+          </p>
+          <div class="requirement" id="arrow-req">需要能量 ≥ 1000</div>
+          <div class="card-foot">
+            <div class="cost">花费 <strong id="arrow-cost">50</strong> 核心</div>
+            <button type="button" id="buy-arrow" class="buy buy-arrow">维度跃迁</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="goal" aria-labelledby="goal-title">
+        <div class="goal-copy">
+          <div class="eyebrow">终极目标</div>
+          <h2 id="goal-title">抵达 10↑↑↑↑↑↑↑10</h2>
+          <p id="goal-status">先解锁 7 个箭头，再堆到 10 级高度/反应堆。</p>
+        </div>
+        <div class="goal-number">10↑↑↑↑↑↑↑10</div>
+      </section>
+
+      <section class="log-panel" aria-labelledby="log-title">
+        <div class="log-head">
+          <h2 id="log-title">事件记录</h2>
+          <span>最近 8 条</span>
+        </div>
+        <ul id="log" class="log"></ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>数值引擎：<code>bignumber.js</code></span>
+      <span>只计算需要的位数，其余保持符号形式</span>
+    </footer>
+  </div>
+
+  <div id="victory" class="victory hidden" role="dialog" aria-modal="true" aria-labelledby="victory-title">
+    <div class="victory-card">
+      <div class="victory-arrows" aria-hidden="true">↑↑↑↑↑↑↑</div>
+      <div class="eyebrow">目标达成</div>
+      <h2 id="victory-title">你造出了 10↑↑↑↑↑↑↑10</h2>
+      <p>产能已经越过这个数字。继续升级，它还会继续膨胀。</p>
+      <div class="victory-stats">
+        <div><span>达成时产能</span><strong id="victory-rate">—</strong></div>
+        <div><span>达成时能量</span><strong id="victory-energy">—</strong></div>
+      </div>
+      <button type="button" id="victory-close" class="buy">继续玩</button>
+    </div>
+  </div>
+
+  <script type="module" src="./game.js"></script>
+</body>
+</html>

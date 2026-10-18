@@ -1,0 +1,12 @@
+{
+  "name": "bignumber",
+  "version": "0.1.0",
+  "description": "Symbolic big numbers with Knuth up-arrows, plus a hypergrowth incremental game",
+  "type": "module",
+  "main": "bignumber.js",
+  "exports": "./bignumber.js",
+  "scripts": {
+    "test": "node --test",
+    "start": "node server.js"
+  }
+}
